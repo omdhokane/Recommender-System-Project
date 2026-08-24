@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Coursewise · Similar Courses{% endblock %}
+{% block content %}
+
+<section class="hero hero--compact">
+  <p class="eyebrow">RELATED COURSES</p>
+  {% if course is not none %}
+  <h1>Students who liked<br>“{{ course.course_name }}”<br>also explored these.</h1>
+  {% else %}
+  <h1>Course not found</h1>
+  <p class="hero-sub">{{ error }}</p>
+  {% endif %}
+</section>
+
+{% if results %}
+<section class="results">
+  <div class="card-grid">
+    {% for r in results %}
+    <article class="course-card">
+      <div class="course-card__perf"></div>
+      <div class="course-card__top">
+        <span class="course-id">{{ r.course_id }}</span>
+        <div class="score-stamp">
+          <span class="score-num">{{ r.match_score }}</span>
+          <span class="score-pct">%</span>
+        </div>
+      </div>
+      <h3 class="course-title">{{ r.course_name }}</h3>
+      <p class="course-meta">{{ r.category }} · {{ r.level }}</p>
+      <div class="course-card__foot">
+        <span class="rating">★ {{ r.rating }}</span>
+        <a href="{{ url_for('similar', course_id=r.course_id) }}" class="similar-link">Find similar →</a>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<a href="{{ url_for('home') }}" class="back-link">← Back to recommendations</a>
+
+{% endblock %}

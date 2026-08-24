@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Coursewise · Course Recommendations{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="grain"></div>
+
+<header class="topbar">
+  <a href="{{ url_for('home') }}" class="brand">
+    <span class="brand-mark">§</span>
+    <span class="brand-name">Coursewise</span>
+  </a>
+  <nav class="topnav">
+    <a href="{{ url_for('home') }}" class="{{ 'active' if request.endpoint == 'home' or request.endpoint == 'recommend' else '' }}">Recommend</a>
+    <a href="{{ url_for('browse') }}" class="{{ 'active' if request.endpoint == 'browse' else '' }}">Catalog</a>
+  </nav>
+</header>
+
+<main>
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="site-footer">
+  <span>Coursewise — Student Course Recommendation System</span>
+  <span class="dot">·</span>
+  <span>Content-based filtering with TF-IDF &amp; cosine similarity</span>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Coursewise · Full Catalog{% endblock %}
+{% block content %}
+
+<section class="hero hero--compact">
+  <p class="eyebrow">FULL CATALOG</p>
+  <h1>Every course<br>on the ledger.</h1>
+  <p class="hero-sub">{{ courses|length }} courses across {{ courses|map(attribute='category')|unique|list|length }} categories.</p>
+</section>
+
+<section class="results">
+  <table class="ledger-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Course</th>
+        <th>Category</th>
+        <th>Level</th>
+        <th>Duration</th>
+        <th>Rating</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for c in courses %}
+      <tr>
+        <td class="mono">{{ c.course_id }}</td>
+        <td>{{ c.course_name }}</td>
+        <td><span class="pill">{{ c.category }}</span></td>
+        <td>{{ c.level }}</td>
+        <td>{{ c.duration_weeks }} wks</td>
+        <td>★ {{ c.rating }}</td>
+        <td><a href="{{ url_for('similar', course_id=c.course_id) }}" class="similar-link">Similar →</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+{% endblock %}

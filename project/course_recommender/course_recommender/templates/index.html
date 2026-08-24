@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Coursewise · Get Recommendations{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <p class="eyebrow">STUDENT COURSE RECOMMENDATION SYSTEM</p>
+  <h1>Tell us what you're<br>chasing. We'll find the<br>course that fits.</h1>
+  <p class="hero-sub">Describe your interests, goals, or the skills you want next — our engine
+    matches your words against every course's profile and ranks the closest fits.</p>
+</section>
+
+<section class="enroll-card">
+  <div class="enroll-card__tab">ENROLLMENT FORM</div>
+  <form method="POST" action="{{ url_for('recommend') }}" class="enroll-form">
+
+    <label class="field">
+      <span class="field-label">01 — What do you want to learn?</span>
+      <textarea name="interests" rows="3" placeholder="e.g. I know a little Python and want to move into machine learning and AI...">{{ query_interests or '' }}</textarea>
+    </label>
+
+    <div class="field-row">
+      <label class="field">
+        <span class="field-label">02 — Preferred category</span>
+        <select name="category">
+          <option value="">Any category</option>
+          {% for c in categories %}
+          <option value="{{ c }}" {{ 'selected' if query_category == c else '' }}>{{ c }}</option>
+          {% endfor %}
+        </select>
+      </label>
+
+      <label class="field">
+        <span class="field-label">03 — Preferred level</span>
+        <select name="level">
+          <option value="">Any level</option>
+          {% for l in levels %}
+          <option value="{{ l }}" {{ 'selected' if query_level == l else '' }}>{{ l }}</option>
+          {% endfor %}
+        </select>
+      </label>
+    </div>
+
+    {% if error %}
+    <p class="form-error">{{ error }}</p>
+    {% endif %}
+
+    <button type="submit" class="submit-btn">Find my courses →</button>
+  </form>
+</section>
+
+{% if results %}
+<section class="results">
+  <div class="results-head">
+    <h2>Recommended for you</h2>
+    <span class="results-count">{{ results|length }} match{{ 'es' if results|length != 1 else '' }}</span>
+  </div>
+
+  <div class="card-grid">
+    {% for r in results %}
+    <article class="course-card">
+      <div class="course-card__perf"></div>
+      <div class="course-card__top">
+        <span class="course-id">{{ r.course_id }}</span>
+        <div class="score-stamp">
+          <span class="score-num">{{ r.match_score }}</span>
+          <span class="score-pct">%</span>
+        </div>
+      </div>
+      <h3 class="course-title">{{ r.course_name }}</h3>
+      <p class="course-meta">{{ r.category }} · {{ r.level }} · {{ r.duration_weeks }} wks</p>
+      <p class="course-desc">{{ r.description }}</p>
+      <div class="course-tags">
+        {% for s in r.skills.split(' ')[:4] %}
+        <span class="tag">{{ s }}</span>
+        {% endfor %}
+      </div>
+      <div class="course-card__foot">
+        <span class="rating">★ {{ r.rating }} <span class="muted">({{ r.num_reviews }})</span></span>
+        <a href="{{ url_for('similar', course_id=r.course_id) }}" class="similar-link">Find similar →</a>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% endblock %}
